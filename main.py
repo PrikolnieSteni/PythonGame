@@ -62,11 +62,13 @@ class GameField(object):
                         n = int(input("Введите число x: "))
                         m = int(input("Введите число y: "))
                         if -1 < n < 5 and -1 < m < 6:
+                            accept = self.field_hasvalue(n, m)
+                            break
+                        else:
                             raise Exception()
-                        break
+                        continue
                     except Exception as e:
                         print('Неверный формат')
-                accept = self.field_hasvalue(n, m)
             else:
                 self.change_field(n, m, object)
                 num_zeros = Counter('0')
