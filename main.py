@@ -15,56 +15,31 @@ class Game(object):
         for i in range(len(self.field)):
             print(i, self.field[i])
 
+    def check_range(self, n, m, index):
+        try:
+            if self.field[n][m] == index:
+                return True
+        except IndexError:
+            return False
+
+    def check_dots(self, n, m, index, player):
+        player = player
+        nm_range = [
+            (n - 1, m - 1),
+            (n - 1, m + 1),
+            (n, m + 1),
+            (n, m - 1),
+            (n + 1, m),
+            (n + 1, m + 1),
+            (n + 1, m - 1),
+        ]
+        for item in nm_range:
+            if self.check_range(*item, index):
+                player.score += 1
+
     def field_creation(self, n, m):
         self.field = [[0 for j in range(m)] for i in range(n)]
         self.show_gamefield()
-
-    def count_score(self, n, m, index, obj):
-        player = obj
-        try:
-            try:
-                if self.field[n][m - 1] == index:
-                    player.score += 1
-            except IndexError:
-                None
-            try:
-                if self.field[n][m + 1] == index:
-                    player.score += 1
-            except IndexError:
-                None
-            try:
-                if self.field[n+1][m] == index:
-                    player.score += 1
-            except IndexError:
-                None
-            try:
-                if self.field[n-1][m] == index:
-                    player.score += 1
-            except IndexError:
-                None
-            try:
-                if self.field[n-1][m-1] == index:
-                    player.score += 1
-            except IndexError:
-                None
-            try:
-                if self.field[n-1][m+1] == index:
-                    player.score += 1
-            except IndexError:
-                None
-            try:
-                if self.field[n+1][m+1] == index:
-                    player.score += 1
-            except IndexError:
-                None
-            try:
-                if self.field[n+1][m-1] == index:
-                    player.score += 1
-            except IndexError:
-                None
-        except:
-            None
-
 
     def change_field(self, n, m, player):
         if player == self.player1:
@@ -74,7 +49,7 @@ class Game(object):
         else:
             index = 3
         self.field[n][m] = index
-        self.count_score(n, m, index, player)
+        self.check_dots(n, m, index, player)
         self.show_gamefield()
 
     def field_hasvalue(self, n, m):
@@ -117,7 +92,7 @@ class Game(object):
                 object = self.change_turn()
         self.end_game()
 
-    def change_turn(self):
+    def change_turn(self):#поменять логику
         if self.player1.turn:
             self.player1.turn = False
             self.player2.turn = True
