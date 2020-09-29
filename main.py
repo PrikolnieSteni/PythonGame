@@ -1,14 +1,11 @@
 from collections import Counter
 
-
 class Game(object):
     def __init__(self):
-        self.player1 = Player()
-        self.player2 = Player()
-        self.player3 = Player()
+        self.players = objs = [Player() for i in range(3)]
         self.field = []
         self.field_creation(5, 6)
-        self.star_game()
+        self.start_game()
 
     def show_gamefield(self):
         print("Игровое поле:\n   0  1  2  3  4  5")
@@ -23,13 +20,13 @@ class Game(object):
             return False
 
     def check_dots(self, n, m, index, player):
-        player = player
         nm_range = [
             (n - 1, m - 1),
             (n - 1, m + 1),
             (n, m + 1),
             (n, m - 1),
             (n + 1, m),
+            (n - 1, m),
             (n + 1, m + 1),
             (n + 1, m - 1),
         ]
@@ -41,15 +38,9 @@ class Game(object):
         self.field = [[0 for j in range(m)] for i in range(n)]
         self.show_gamefield()
 
-    def change_field(self, n, m, player):
-        if player == self.player1:
-            index = 1
-        elif player == self.player2:
-            index = 2
-        else:
-            index = 3
-        self.field[n][m] = index
-        self.check_dots(n, m, index, player)
+    def change_field(self, n, m, current_player):
+        self.field[n][m] = self.players.index(current_player)
+        self.check_dots(n, m, self.players.index(current_player), current_player)
         self.show_gamefield()
 
     def field_hasvalue(self, n, m):
@@ -60,20 +51,18 @@ class Game(object):
             return True
 
     def end_game(self):
-        print(self.player1)
-        print(self.player2)
-        print(self.player3)
+        for i in self.players:
+            print(i)
 
-    def star_game(self):
+    def start_game(self):
         num_zeros = 1
-        self.player1.turn = True
-        object = self.player1
+        self.players[0].turn = True
+        current_player = self.players[0]
         while num_zeros != 0:
             print("Ходит:{}".format(object))
             accept = False
             while not accept:
                 print("Введите координаты по x,y")
-
                 while True:
                     try:
                         n = int(input("Введите число x: "))
@@ -87,25 +76,25 @@ class Game(object):
                     except Exception as e:
                         print('Неверный формат')
             else:
-                self.change_field(n, m, object)
+                self.change_field(n, m, current_player)
                 num_zeros = sum(x.count(0) for x in self.field)
-                object = self.change_turn()
+                current_player = self.change_turn()
         self.end_game()
 
     def change_turn(self):#поменять логику
-        if self.player1.turn:
-            self.player1.turn = False
-            self.player2.turn = True
-            object = self.player2
-        elif self.player2.turn:
-            self.player2.turn = False
-            self.player3.turn = True
-            object = self.player3
+        if self.players[0].turn:
+            self.players[0].turn = False
+            self.players[1].turn = True
+            current_player = self.players[1]
+        elif self.players[1].turn:
+            self.players[1].turn = False
+            self.players[2].turn = True
+            current_player = self.players[2]
         else:
-            self.player3.turn = False
-            self.player1.turn = True
-            object = self.player1
-        return object
+            self.players[2].turn = False
+            self.players[0].turn = True
+            current_player = self.players[0]
+        return current_player
 
 
 class Player:
