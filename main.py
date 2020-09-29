@@ -39,8 +39,9 @@ class Game(object):
         self.show_gamefield()
 
     def change_field(self, n, m, current_player):
-        self.field[n][m] = self.players.index(current_player)
-        self.check_dots(n, m, self.players.index(current_player), current_player)
+        index = self.players.index(current_player)+1
+        self.field[n][m] = index
+        self.check_dots(n, m, index, current_player)
         self.show_gamefield()
 
     def field_hasvalue(self, n, m):
@@ -49,17 +50,24 @@ class Game(object):
             return False
         else:
             return True
+    def game_winner(self):
+        min = self.players[0].score
+        winner = self.players[0]
+        for i in range(len(self.players)):
+            if min < self.players[i].score:
+                winner = self.players[i]
+        return print('Победитель!: {0}, количество очков: {1}'.format(winner.name, winner.score))
 
     def end_game(self):
-        for i in self.players:
-            print(i)
+        print(*self.players)
+        self.game_winner()
 
     def start_game(self):
         num_zeros = 1
         self.players[0].turn = True
         current_player = self.players[0]
         while num_zeros != 0:
-            print("Ходит:{}".format(object))
+            print("Ходит:{}".format(current_player))
             accept = False
             while not accept:
                 print("Введите координаты по x,y")
@@ -79,6 +87,7 @@ class Game(object):
                 self.change_field(n, m, current_player)
                 num_zeros = sum(x.count(0) for x in self.field)
                 current_player = self.change_turn()
+                print('score:',current_player.score)
         self.end_game()
 
     def change_turn(self):
