@@ -2,7 +2,7 @@ from collections import Counter
 
 class Game(object):
     def __init__(self):
-        self.players = objs = [Player() for i in range(3)]
+        self.players = [Player() for i in range(3)]
         self.field = []
         self.field_creation(5, 6)
         self.start_game()
@@ -81,7 +81,7 @@ class Game(object):
                 current_player = self.change_turn()
         self.end_game()
 
-    def change_turn(self):#поменять логику
+    def change_turn(self):
         if self.players[0].turn:
             self.players[0].turn = False
             self.players[1].turn = True
@@ -102,7 +102,7 @@ class Player:
         print("\nВведите желаемое имя:")
         input_name = input()
         while type(input_name) is not str:
-            print("Некоректное имя")
+            print("Некорректное имя")
             break
         else:
             self.turn = False
